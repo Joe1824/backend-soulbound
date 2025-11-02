@@ -1,24 +1,29 @@
-// api.js
-import axios from 'axios';
+import axios from 'axios'
+import { ethers } from 'ethers'
+import lighthouse from '@lighthouse-web3/sdk'
+import dotenv from "dotenv";
+dotenv.config();
 
-const API_BASE_URL = 'http://localhost:5000';
 
-export const registerUser = async (data) => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}/register`, data);
-        return response.data;
-    } catch (error) {
-        console.error('Error registering user:', error);
-        throw error;
-    }
-};
+const signAuthMessage = async(privateKey, verificationMessage) =>{
+  const signer = new ethers.Wallet(privateKey)
+  const signedMessage = await signer.signMessage(verificationMessage)
+  return(signedMessage)
+}
 
-export const authenticateUser = async (data) => {
-    try {
-        const response = await axios.post(`${API_BASE_URL}/verify`, data);
-        return response.data;
-    } catch (error) {
-        console.error('Error authenticating user:', error);
-        throw error;
-    }
-};
+const getApiKey = async() =>{
+  const wallet = {
+    publicKey: process.env.Wallet, // Ex: '0xEaF4E24ffC1A2f53c07839a74966A6611b8Cb8A1'
+    privateKey: process.env.PRIVATE_KEY // Ex: '0xabc123...'
+  }
+  const verificationMessage = (
+    await axios.get(
+        `https://api.lighthouse.storage/api/auth/get_message?publicKey=${wallet.publicKey}`
+    )
+  ).data
+  const signedMessage = await signAuthMessage(wallet.privateKey, verificationMessage)
+  const response = await lighthouse.getApiKey(wallet.publicKey, signedMessage)
+  console.log(response)
+}
+
+getApiKey();

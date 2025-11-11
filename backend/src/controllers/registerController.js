@@ -36,7 +36,7 @@ export const registerUser = async (req, res) => {
         }
 
         // wallet already registered check
-        const existingWallet = await User.findOne({ walletAddress });
+        const existingWallet = await User.findOne({ walletAddress });   
         if (existingWallet) {
             return res.status(400).json({ error: 'Wallet address already registered' });
         }
@@ -135,10 +135,8 @@ export const registerUser = async (req, res) => {
 
         return res.status(200).json({
             message: 'Registered & NFT minted',
-            biometricCID,
-            profileCID,
-            metadataCID,
-            tokenId
+            tokenId,
+            transactionHash: tx.hash
         });
 
 

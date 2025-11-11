@@ -35,7 +35,12 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'User already registered' });
         }
 
-
+        // wallet already registered check
+        const existingWallet = await User.findOne({ walletAddress });
+        if (existingWallet) {
+            return res.status(400).json({ error: 'Wallet address already registered' });
+        }
+        
         // Verify wallet signature with nonce
         const recovered = verifySignature(message, signature);
         if (!recovered || recovered.toLowerCase() !== walletAddress.toLowerCase()) {

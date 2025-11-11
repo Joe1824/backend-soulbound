@@ -22,7 +22,7 @@ export const authenticateUser = async (req, res) => {
         if (!walletAddress || !embedding || !signature || !message) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-
+    
         // Input validation
         if (typeof walletAddress !== 'string' || !/^0x[a-fA-F0-9]{40}$/.test(walletAddress)) {
             return res.status(400).json({ error: 'Invalid wallet address format' });

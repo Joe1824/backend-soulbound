@@ -5,7 +5,6 @@ import { contract } from '../config/blockchain.js';
 import { verifySignature } from '../utils/walletUtils.js';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-import axios from 'axios';
 dotenv.config();
 
 // Cosine similarity helper

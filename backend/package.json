@@ -16,7 +16,7 @@
   "dependencies": {
     "@lighthouse-web3/sdk": "^0.4.3",
     "@openzeppelin/contracts": "^5.4.0",
-    "axios": "^1.6.8",
+    "axios": "^1.13.2",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",

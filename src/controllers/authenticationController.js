@@ -5,15 +5,16 @@ import { contract } from '../config/blockchain.js';
 import { verifySignature } from '../utils/walletUtils.js';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
-
+import axios from 'axios';
 dotenv.config();
 
 // Cosine similarity helper
-const cosineSimilarity = (a, b) => {
-    const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
-    const normA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
-    const normB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
-    return dotProduct / (normA * normB);
+const cosineSimilarity = async (a, b) => {
+    const request = await axios.post(`${process.env.Biometric_cosine_url}/verify`, {
+        embedding1: Array.from(a),
+        embedding2: Array.from(b)
+    });
+    return request.data.match;
 };
 
 export const authenticateUser = async (req, res) => {
@@ -82,9 +83,8 @@ export const authenticateUser = async (req, res) => {
 
         // Compare embeddings
         const similarity = cosineSimilarity(storedEmbeddingArray, providedEmbeddingArray);
-        const THRESHOLD = parseFloat(process.env.SIMILARITY_THRESHOLD) || 0.8;
-
-        if (similarity < THRESHOLD) {
+        
+        if (!similarity) {
             return res.status(200).json({ authenticated: false });
         }
 

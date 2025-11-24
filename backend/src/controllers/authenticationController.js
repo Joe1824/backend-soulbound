@@ -14,7 +14,7 @@ const cosineSimilarity = async (a, b) => {
             embedding1: Array.from(a),
             embedding2: Array.from(b),
         });
-        console.log(request.data.cosine_similarity);
+        ;
         if (request.status !== 200) {
             console.error('API error: status', request.status);
             return false;
@@ -23,7 +23,7 @@ const cosineSimilarity = async (a, b) => {
             console.error('Invalid API response:', request.data);
             return false;
         }
-        return request.data.success;
+        return request.data;
     }
     catch (error) {
         console.error('Error computing cosine similarity:', error.message);
@@ -98,8 +98,9 @@ export const authenticateUser = async (req, res) => {
 
         // Compare embeddings
         const match = await cosineSimilarity(storedEmbeddingArray, providedEmbeddingArray);
-        console.log("match:", match);
-        if (!match) {
+        console.log("match:", match.success);
+        console.log("similarity score:", match.cosine_similarity);
+        if (!match.success) {
             return res.status(200).json({ authenticated: false });
         }
 

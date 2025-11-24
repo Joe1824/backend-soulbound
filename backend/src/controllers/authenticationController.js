@@ -10,8 +10,8 @@ dotenv.config();
 const cosineSimilarity = async (a, b) => {
     try {
         const request = await axios.post(`${process.env.Biometric_cosine_url}/verify`, {
-            embedding1: Array.from(a),
-            embedding2: Array.from(b)
+            embedding1: a,
+            embedding2: b
         });
         if (request.status !== 200) {
             console.error('API error: status', request.status);
@@ -95,9 +95,9 @@ export const authenticateUser = async (req, res) => {
             : Float32Array.from(embedding);
 
         // Compare embeddings
-        const similarity = await cosineSimilarity(storedEmbeddingArray, providedEmbeddingArray);
-
-        if (!similarity) {
+        const match = await cosineSimilarity(storedEmbeddingArray, providedEmbeddingArray);
+        console.log("match:", match);
+        if (!match) {
             return res.status(200).json({ authenticated: false });
         }
 
@@ -109,7 +109,7 @@ export const authenticateUser = async (req, res) => {
             const decryptedProfileBuffer = decryptWithAES(aesKey, profileEnc);
             profile = JSON.parse(decryptedProfileBuffer.toString());
         }
-        console.log("similarity:", similarity);
+        console.log("similarity:", match);
         return res.status(200).json({ authenticated: true, walletAddress, profile });
     }
     catch (error) {

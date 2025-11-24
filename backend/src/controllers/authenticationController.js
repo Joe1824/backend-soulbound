@@ -14,7 +14,7 @@ const cosineSimilarity = async (a, b) => {
             embedding1: Array.from(a),
             embedding2: Array.from(b),
         });
-
+        console.log(request.data.cosine_similarity);
         if (request.status !== 200) {
             console.error('API error: status', request.status);
             return false;

@@ -6,6 +6,8 @@ import Routes from './routes/Routes.js';
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 // General rate limiting
 const generalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes

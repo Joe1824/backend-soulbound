@@ -100,6 +100,7 @@ export const authenticateUser = async (req, res) => {
         const match = await cosineSimilarity(storedEmbeddingArray, providedEmbeddingArray);
         console.log("match:", match.success);
         console.log("similarity score:", match.cosine_similarity);
+        console.log(match);
         if (!match.success) {
             return res.status(200).json({ authenticated: false });
         }

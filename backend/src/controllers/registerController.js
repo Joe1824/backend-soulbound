@@ -3,7 +3,6 @@ import { generateAESKey, encryptWithAES, encryptAESKeyWithMaster, sha256Hex } fr
 import { uploadFileToLighthouse, uploadJSONToLighthouse } from '../config/lighthouse.js';
 import { verifySignature } from '../utils/walletUtils.js';
 import { contract } from '../config/blockchain.js';
-import crypto from 'crypto';
 
 export const registerUser = async (req, res) => {
     try {
@@ -100,11 +99,11 @@ export const registerUser = async (req, res) => {
         const aesKeyEncryptedObj = encryptAESKeyWithMaster(aesKey, process.env.MASTER_KEY);
 
         // 8.store the walletAddress and aesKeyEncryptedObj in DB
-        const userDoc = await User.create({
-            walletAddress,
-            AadharNumber,
-            aesKeyEncrypted: JSON.stringify(aesKeyEncryptedObj),
-        });
+            const userDoc = await User.create({
+                walletAddress,
+                AadharNumber,
+                aesKeyEncrypted: JSON.stringify(aesKeyEncryptedObj),
+            });
 
 
         // 9. mint NFT (backend signer mints)

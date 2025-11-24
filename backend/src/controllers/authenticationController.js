@@ -9,19 +9,21 @@ dotenv.config();
 // Cosine similarity helper
 const cosineSimilarity = async (a, b) => {
     try {
-        const request = await axios.post(`${process.env.Biometric_cosine_url}/verify`, {
-            embedding1: a,
-            embedding2: b
+       
+        const request = await axios.post(`${process.env.Biometric_cosine_url}/cosine`, {
+            embedding1: Array.from(a),
+            embedding2: Array.from(b),
         });
+
         if (request.status !== 200) {
             console.error('API error: status', request.status);
             return false;
         }
-        if (!request.data || typeof request.data.match !== 'boolean') {
+        if (!request.data || typeof request.data.success !== 'boolean') {
             console.error('Invalid API response:', request.data);
             return false;
         }
-        return request.data.match;
+        return request.data.success;
     }
     catch (error) {
         console.error('Error computing cosine similarity:', error.message);

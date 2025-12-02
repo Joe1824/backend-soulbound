@@ -16,8 +16,11 @@ const generalLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
 });
-
-app.use(cors());
+const allowedOrigins = ['http://localhost:5173','https://web3-app-demo.vercel.app','https://nftauth.vercel.app','https://soulboundregistration.vercel.app'];
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(generalLimiter);
 app.use('/api', Routes);
